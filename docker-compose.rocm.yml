@@ -1,0 +1,8 @@
+services:
+  dev-container:
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    group_add:
+      - video
+      - render

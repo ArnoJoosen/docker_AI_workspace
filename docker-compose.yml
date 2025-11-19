@@ -1,0 +1,29 @@
+services:
+  dev-container:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        # --- Build arguments for Dockerfile ---
+        BUILD_TARGET: ${BUILD_TARGET:-cuda} # Target environment: 'cuda', 'rocm', or 'cpu'
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.10} # Python version to install
+        USERNAME: ${DOCKER_USERNAME:-user} # Add this line
+        SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY}
+        JUPYTER_TOKEN: ${JUPYTER_TOKEN}
+        USER_PASSWORD: ${USER_PASSWORD}
+        ROOT_PASSWORD: ${ROOT_PASSWORD}
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    container_name: cuda-ssh-container
+    environment:
+      - USERNAME=${DOCKER_USERNAME:-user}
+      - ENV_USERNAME=${DOCKER_USERNAME:-user}
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN}
+    ports:
+      - "2222:22"
+      - "8888:8888"
+    volumes:
+      - ./workspace:/home/${DOCKER_USERNAME:-user}/workspace
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
